@@ -1,0 +1,75 @@
+.postWrapper {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.post {
+  border-radius: 1rem;
+  width: 80%;
+  border: 2px solid white;
+  display: grid;
+  grid-template-columns: 0.4fr 6fr;
+  /* grid-template-areas: "a b c"; */
+  background-color: var(--White);
+  margin: 0 auto;
+  padding: 1rem;
+}
+.post.comment {
+}
+
+.post .content {
+  padding: 1rem;
+}
+.post .head {
+  display: flex;
+  font-size: 1.2rem;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.post .author {
+  display: flex;
+  font-size: 1.2rem;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.post .avatar {
+  width: 3rem;
+  height: 3rem;
+}
+.post .postText {
+  padding-top: 1rem;
+}
+.post .text {
+  font-size: 1.5rem;
+  font-weight: var(--medium-fw);
+  /* background-color: brown; */
+  color: var(--Grayish-Blue);
+  word-break: break-all;
+  /* word-wrap: break-word; */
+}
+.post .username {
+  font-weight: var(--large-fw);
+}
+.post .time {
+  color: var(--Grayish-Blue);
+  font-size: 1.4rem;
+  font-weight: var(--medium-fw);
+}
+.post .reply {
+  /* background-color: chocolate; */
+  font-size: 1.5rem;
+  color: var(--Moderate-blue);
+  font-weight: var(--large-fw);
+  cursor: pointer;
+  display: flex;
+}
+
+/* DESIGN FOR REPLY */
+
+.post.reply {
+  align-self: flex-end;
+  justify-self: flex-end;
+  padding: 0.7rem;
+}

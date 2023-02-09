@@ -1,0 +1,98 @@
+/*   // ### Font */
+@import url("https://fonts.google.com/specimen/Rubik");
+:root {
+  /* Colors */
+
+  /* // ### Primary */
+
+  --Moderate-blue: hsl(238, 40%, 52%);
+  --Soft-Red: hsl(358, 79%, 66%);
+  --mainBg: hsl(239, 57%, 85%);
+  --Pale-red: hsl(357, 100%, 86%);
+
+  /* // ### Neutral */
+
+  --Dark-blue: hsl(212, 24%, 26%);
+  --Grayish-Blue: hsl(211, 10%, 45%);
+  --Light-gray: hsl(223, 19%, 93%);
+  --Very-light-gray: hsl(228, 33%, 97%);
+  --White: hsl(0, 0%, 100%);
+
+  /* // ## Typography */
+
+  --small-fw: 400;
+  --medium-fw: 500;
+  --large-fw: 700;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+html {
+  font-size: 62.5%;
+}
+body {
+  background-color: var(--Light-gray);
+}
+nav.header {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: var(--Dark-blue);
+  color: white;
+  font-weight: var(--medium-fw);
+  margin-left: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding: 2rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-bottom: 2rem;
+  height: 50px;
+}
+nav.header ul {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  font-size: 1.7rem;
+}
+nav.header ul li {
+  cursor: pointer;
+}
+/* VOTE COMPONENT */
+
+.vote {
+  /* background-color: chocolate; */
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  font-size: 1.7rem;
+  font-weight: var(--large-fw);
+  color: var(--Moderate-blue);
+}
+.vote .voteWrapper {
+  /* background-color: crimson; */
+  background-color: var(--Light-gray);
+
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.vote img {
+  width: 1.5rem;
+  display: block;
+  gap: 10rem;
+  cursor: pointer;
+}
+.vote .count {
+  padding: 1rem 0;
+  display: inline-block;
+}
+/* THIS FILE CONTAINS ALL THE MEDIA QUERIES */
+
+@media screen and (max-width: 580px) {
+  /* this width will be the responsive width */
+}

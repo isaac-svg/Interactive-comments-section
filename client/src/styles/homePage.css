@@ -1,0 +1,22 @@
+.homepage {
+  min-height: calc(100vh - 50px);
+  max-height: none;
+  max-width: 900px;
+  display: block;
+  padding-top: 60px;
+  margin: 0 auto;
+  /* background-color: rebeccapurple; */
+}
+.mainComments {
+  display: block;
+  gap: 1rem;
+  /* background-color: orange; */
+  width: 100%;
+  height: 100%;
+  /* border: 2px solid red; */
+}
+.replySection {
+  border: 2px solid var(--Light-gray);
+  width: 86%;
+  margin-left: auto;
+}

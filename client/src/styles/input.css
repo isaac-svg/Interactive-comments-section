@@ -1,0 +1,37 @@
+.inputForm {
+  width: 80%;
+  display: flex;
+  margin: 1rem auto;
+  background-color: var(--White);
+  padding: 2rem;
+  margin-bottom: 3rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  border-radius: 1rem;
+}
+.inputForm img {
+  width: 4rem;
+}
+.inputForm .send {
+  color: var(--White);
+  border-radius: 1rem;
+  background-color: var(--Moderate-blue);
+  outline: none;
+  border: none;
+  padding: 1rem 1.5rem;
+  font-weight: var(--medium-fw);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+.inputForm .send:focus {
+  outline: 2px solid aqua;
+}
+textarea {
+  /* width: ; */
+  flex: 1;
+  padding: 1rem;
+  color: var(--Grayish-Blue);
+  font-weight: var(--medium-fw);
+  font-size: 1.6rem;
+}
