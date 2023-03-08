@@ -12,6 +12,7 @@ const replySchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    replies: [],
     vote: {
       type: Number,
       default: 0,

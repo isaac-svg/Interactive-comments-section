@@ -1,15 +1,13 @@
 const { Comments } = require("../models/Comment");
 const jwt = require("jsonwebtoken");
 const { Reply } = require("../models/Reply");
-module.exports.create = async (req, res) => {
+module.exports.createComment = async (req, res) => {
   const { content } = req.body;
-  console.log(req.body);
 
   try {
     const token = req.headers.cookie.split("=")[2];
     //
-    console.log(req.headers.cookie.split("=")[2], "req.cookie");
-    console.log(token, "\n");
+
     const info = jwt.verify(token, process.env.JWT_SECRET);
     console.log(info, "info");
     const comment = await Comments.create({
@@ -80,7 +78,7 @@ module.exports.deleteComment = async (req, res) => {
     });
   }
 };
-// Deleting Comment
+// Deleting Reply
 module.exports.deleteReply = async (req, res) => {
   const { replyId, commentId } = req.body;
   console.log(req.params);
@@ -115,7 +113,7 @@ module.exports.replyComment = async (req, res) => {
     console.log(req.body, "from reply");
     const reply = await Reply.create({ content, commentId });
     const comment = await Comments.findById(commentId);
-    await comment.updateOne({ $push: { replies: reply } });
+    const data = await comment.updateOne({ $push: { replies: reply } });
     count++;
     console.log(count);
 
@@ -123,6 +121,7 @@ module.exports.replyComment = async (req, res) => {
       success: true,
       message: "reply Successfull",
       comment,
+      reply,
     });
   } catch (error) {
     res.json({
@@ -132,7 +131,23 @@ module.exports.replyComment = async (req, res) => {
     });
   }
 };
-
+// Replying a Reply
+module.exports.replyReply = async (req, res) => {
+  const { content, commentId } = req.body;
+  try {
+    const reply = await Reply.create(content);
+    const comment = await Comments.findOneAndUpdate(commentId, {
+      $push: { replies: reply },
+    });
+    console.log("reply to reply successful");
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "replying to a reply failed",
+      error: error.message,
+    });
+  }
+};
 // get All Comments
 
 module.exports.getAllComments = async (req, res) => {

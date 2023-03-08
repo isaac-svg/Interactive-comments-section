@@ -5,15 +5,17 @@ import "../styles/homePage.css";
 import Comment from "./Comment";
 import Avatar from "../assets/images/avatars/image-amyrobson.png";
 import InputComponet from "./InputComponet";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useComment } from "../CommentContext";
 import { BASE_URL } from "../assets/URL";
+import { postsActions } from "../store/posts-slice";
 
 const HomePage = () => {
   const Posts = useSelector((state) => state.posts.posts);
   const [reply, setReply] = useState(false);
+  const dispatch = useDispatch();
   const showReply = (e) => {
     setReply(!reply);
   };
@@ -28,7 +30,7 @@ const HomePage = () => {
       credentials: "include",
     })
       .then((res) => res.json())
-      .then((data) => setPosts(data))
+      .then((data) => dispatch(postsActions.addPost(data)))
       .catch((err) => console.log(err.message));
   }, []);
   console.log(posts);
@@ -38,10 +40,10 @@ const HomePage = () => {
       <main className="homepage">
         <div className="mainComments">
           <React.Fragment>
-            {posts.length > 0 &&
-              posts.map((post, index) => (
+            {Posts.length > 0 &&
+              Posts.map((post, index) => (
                 <>
-                  {console.log(post)}
+                  {console.log(post, index)}
                   <Comment
                     key={post._id}
                     avatar={Avatar}
@@ -53,8 +55,7 @@ const HomePage = () => {
                   />
                   <div className="replySection" key={index}>
                     {/* REPLIES WILL BE LOOPED OVER HERE */}
-                    {/* {console.log(post)} */}
-                    {post?.replies.map((reply) => (
+                    {post?.replies?.map((reply) => (
                       <Comment
                         key={reply._id}
                         avatar={Avatar}
@@ -78,17 +79,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-/*
- <Comment
-              avatar={Avatar}
-              purpose={"comment"}
-              username={"amyrosbe-son"}
-              date={"1 month ago"}
-              text={
-                " Lorem ipsum dolor sit, amet consectetur adipisicing elit. Estaccusamus nobis quisquam at iure neque consectetur dicta Nulla, dolore quisquam Lorem ipsum dolor sit, amet consectetur adipisicing elit. Estaccusamus nobis quisquam at iure neque consectetur dicta Nulla, dolore quisquam!"
-              }
-            />
-
-
-*/
