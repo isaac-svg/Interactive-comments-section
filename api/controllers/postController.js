@@ -1,24 +1,18 @@
 const { Comments } = require("../models/Comment");
 const jwt = require("jsonwebtoken");
 const { Reply } = require("../models/Reply");
+const { StatusCodes } = require("http-status-codes");
 module.exports.createComment = async (req, res) => {
   const { content } = req.body;
 
   try {
-    const token = req.headers.cookie.split("=")[2];
-    //
-
-    const info = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(info, "info");
     const comment = await Comments.create({
       content,
-      author: info.id,
     });
     res.json({
       success: true,
       message: "Comment created",
       comment,
-      id: info.id,
     });
   } catch (error) {
     res.json({
@@ -28,23 +22,23 @@ module.exports.createComment = async (req, res) => {
     });
   }
 };
-// Updating post
+// Updating comment
 module.exports.updateComment = async (req, res) => {
   const { content, commentId } = req.body;
 
   try {
-    const token = req.headers.cookie.split("=")[1];
-    //
-    const info = jwt.verify(token, process.env.JWT_SECRET);
-    const updatedComment = await Comments.findByIdAndUpdate(commentId, {
-      $set: { content },
-    });
+    const updatedComment = await Comments.findByIdAndUpdate(
+      commentId,
+      {
+        $set: { content },
+      },
+      { new: true }
+    );
 
     res.json({
       success: true,
-      message: "Comment created",
+      message: "Comment updated",
       updatedComment,
-      id: info.id,
     });
   } catch (error) {
     res.json({
@@ -57,23 +51,18 @@ module.exports.updateComment = async (req, res) => {
 // Deleting Comment
 module.exports.deleteComment = async (req, res) => {
   const { commentId } = req.body;
-  console.log(req.params);
-  try {
-    const token = req.headers.cookie.split("=")[1];
-    //
-    const info = jwt.verify(token, process.env.JWT_SECRET);
-    const deletedComment = await Comments.findByIdAndDelete(commentId);
 
-    res.json({
+  try {
+    await Comments.findByIdAndDelete(commentId);
+
+    res.status(StatusCodes.OK).json({
       success: true,
       message: "Comment deleted",
-      deletedComment,
-      id: info.id,
     });
   } catch (error) {
     res.json({
       success: false,
-      message: "Comment update failed",
+      message: "Comment deletion failed",
       error: error.message,
     });
   }
@@ -81,46 +70,41 @@ module.exports.deleteComment = async (req, res) => {
 // Deleting Reply
 module.exports.deleteReply = async (req, res) => {
   const { replyId, commentId } = req.body;
-  console.log(req.params);
+
   try {
-    const token = req.headers.cookie.split("=")[1];
-    //
-    const info = jwt.verify(token, process.env.JWT_SECRET);
-    const comment = await Comments.findById(commentId);
-    const reply = await Reply.findById(replyId);
-    const deletedReply = await comment.updateOne({ $pull: { replies: reply } });
+    await Reply.findByIdAndDelete(replyId);
+    await Comments.findByIdAndUpdate(commentId, {
+      $pull: { replies: replyId },
+    });
 
     res.json({
       success: true,
       message: "Comment deleted",
-      deletedReply,
-      id: info.id,
     });
   } catch (error) {
     res.json({
       success: false,
-      message: "Comment update failed",
+      message: "Comment deletion failed",
       error: error.message,
     });
   }
 };
-// reply
-let count = 0;
+// reply Comment
+
 module.exports.replyComment = async (req, res) => {
-  const { id } = req.params;
   try {
-    const { content, commentId } = req.body;
-    console.log(req.body, "from reply");
-    const reply = await Reply.create({ content, commentId });
-    const comment = await Comments.findById(commentId);
-    const data = await comment.updateOne({ $push: { replies: reply } });
-    count++;
-    console.log(count);
+    const { replyContent, commentId } = req.body;
+
+    const reply = await Reply.create({ replyContent, commentId });
+    const comment = await Comments.findByIdAndUpdate(
+      commentId,
+      { $push: { replies: reply._id } },
+      { new: true }
+    );
 
     res.json({
       success: true,
       message: "reply Successfull",
-      comment,
       reply,
     });
   } catch (error) {
@@ -131,15 +115,25 @@ module.exports.replyComment = async (req, res) => {
     });
   }
 };
-// Replying a Reply
+// Replying to a  Reply
 module.exports.replyReply = async (req, res) => {
-  const { content, commentId } = req.body;
+  const { content, replyId } = req.body;
   try {
-    const reply = await Reply.create(content);
-    const comment = await Comments.findOneAndUpdate(commentId, {
-      $push: { replies: reply },
+    // create a reply
+    const reply = await Reply.create({ content });
+    // get the reply document then push the new replyId to it
+    const updatedReply = await Reply.findOneAndUpdate(
+      replyId,
+      {
+        $push: { replies: reply._id },
+      },
+      { new: true }
+    );
+    res.json({
+      success: true,
+      message: "You have replied to a reply",
+      updatedReply,
     });
-    console.log("reply to reply successful");
   } catch (error) {
     res.json({
       success: false,
@@ -148,12 +142,42 @@ module.exports.replyReply = async (req, res) => {
     });
   }
 };
+module.exports.deleteReplyToReply = async (req, res) => {
+  const { replyToReplyId, replyId } = req.body;
+  try {
+    const reply = await Reply.findByIdAndUpdate(
+      replyId,
+      {
+        $pull: { replies: replyToReplyId },
+      },
+      { new: true }
+    );
+    res.json({
+      success: true,
+      message: "You have deleted a reply to a reply",
+      reply,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: " deletion of a reply to a reply failed",
+      error: error.message,
+    });
+  }
+};
 // get All Comments
 
 module.exports.getAllComments = async (req, res) => {
   try {
-    const comments = await Comments.find();
-    res.json(comments);
+    // const comments = await Comments.deleteMany();
+
+    const comments = await Comments.find().populate("replies");
+
+    const replies = await Reply.find()
+      .populate("replies", ["content", "vote"])
+      .limit(5);
+
+    res.json({ replies, comments });
   } catch (error) {
     res.json({
       success: false,

@@ -1,5 +1,24 @@
 const mongoose = require("mongoose");
+const replyToReplySchema = new mongoose.Schema(
+  {
+    replyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Reply",
+    },
+    content: {
+      type: String,
+    },
+    avatar: {
+      type: String,
+    },
+    vote: {
+      type: Number,
+      default: 0,
+    },
+  },
 
+  { timestamps: true }
+);
 const replySchema = new mongoose.Schema(
   {
     commentId: {
@@ -12,7 +31,7 @@ const replySchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
-    replies: [],
+    replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Reply" }],
     vote: {
       type: Number,
       default: 0,
@@ -22,5 +41,5 @@ const replySchema = new mongoose.Schema(
 );
 
 const Reply = mongoose.model("Reply", replySchema);
-
+const ReplyToReply = mongoose.model("ReplyToReply", replyToReplySchema);
 module.exports = { Reply };
