@@ -35,6 +35,7 @@ const replySchema = new mongoose.Schema(
     vote: {
       type: Number,
       default: 0,
+      min: 0,
     },
   },
   { timestamps: true }
@@ -42,4 +43,4 @@ const replySchema = new mongoose.Schema(
 
 const Reply = mongoose.model("Reply", replySchema);
 const ReplyToReply = mongoose.model("ReplyToReply", replyToReplySchema);
-module.exports = { Reply };
+module.exports = { Reply, ReplyToReply };

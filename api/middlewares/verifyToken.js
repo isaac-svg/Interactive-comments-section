@@ -22,3 +22,12 @@ module.exports.verifyUser = (req, res, next) => {
     }
   });
 };
+module.exports.isNotAllowed = (req, res, next) => {
+  this.verifyToken(req, res, next, () => {
+    if (req.user.id == req.params.id) {
+      return next(new Error("You are not authorized to perfom this operation"));
+    } else {
+      return next();
+    }
+  });
+};

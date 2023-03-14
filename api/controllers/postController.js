@@ -1,6 +1,6 @@
 const { Comments } = require("../models/Comment");
 const jwt = require("jsonwebtoken");
-const { Reply } = require("../models/Reply");
+const { Reply, ReplyToReply } = require("../models/Reply");
 const { StatusCodes } = require("http-status-codes");
 module.exports.createComment = async (req, res) => {
   const { content } = req.body;
@@ -120,15 +120,16 @@ module.exports.replyReply = async (req, res) => {
   const { content, replyId } = req.body;
   try {
     // create a reply
-    const reply = await Reply.create({ content });
-    // get the reply document then push the new replyId to it
-    const updatedReply = await Reply.findOneAndUpdate(
+    const replyingReply = await ReplyToReply.create({ content });
+    const updatedReply = await Reply.findByIdAndUpdate(
       replyId,
       {
-        $push: { replies: reply._id },
+        $push: { replies: replyingReply._id },
       },
       { new: true }
     );
+    // get the reply document then push the new replyId to it
+
     res.json({
       success: true,
       message: "You have replied to a reply",
@@ -170,18 +171,70 @@ module.exports.deleteReplyToReply = async (req, res) => {
 module.exports.getAllComments = async (req, res) => {
   try {
     // const comments = await Comments.deleteMany();
+    // const replies = await Reply.deleteMany();
 
     const comments = await Comments.find().populate("replies");
 
     const replies = await Reply.find()
       .populate("replies", ["content", "vote"])
-      .limit(5);
+      .limit(10);
 
-    res.json({ replies, comments });
+    res.json({ From: replies, comments });
+    // res.json("ok");
   } catch (error) {
     res.json({
       success: false,
       message: "Getting all users failed",
+      error: error.message,
+    });
+  }
+};
+//  UPVOTE AND DOWNVOTE
+
+module.exports.upVote = async (req, res) => {
+  const { commentId } = req.body;
+
+  try {
+    const voteCount = await Comments.findByIdAndUpdate(
+      commentId,
+      {
+        $inc: { vote: 1 },
+      },
+      { new: true }
+    ).select("vote");
+    res.status(StatusCodes.OK).json({
+      success: true,
+      msg: "vote increased by one",
+      paylaod: voteCount,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "up voting failed",
+      error: error.message,
+    });
+  }
+};
+module.exports.downVote = async (req, res) => {
+  const { commentId } = req.body;
+
+  try {
+    const voteCount = await Comments.findByIdAndUpdate(
+      commentId,
+      {
+        $inc: { vote: -1 },
+      },
+      { new: true }
+    ).select("vote");
+    res.status(StatusCodes.OK).json({
+      success: true,
+      msg: "vote increased by one",
+      paylaod: voteCount,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: "down voting failed",
       error: error.message,
     });
   }
