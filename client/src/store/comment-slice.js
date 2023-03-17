@@ -4,21 +4,12 @@ import PostsSlice from "./posts-slice";
 const commentSlice = createSlice({
   name: "post",
   initialState: {
-    repliesArr: [],
-    avatar: "",
-    text: "",
-    purpose: "",
-    username: "",
-    date: "",
-    id: "",
-    isReplying: false,
+    comments: [],
   },
   reducers: {
     addReply(state, action) {
-      const { addReplyToComment } = PostsSlice.actions;
-      console.log(addReplyToComment);
-      addReplyToComment(action.payload);
-      console.log("object");
+      const reply = action.payload;
+      state.comments.push(reply);
     },
     editPost(state, action) {},
     deletePost(state, action) {},

@@ -13,14 +13,13 @@ import { BASE_URL } from "../assets/URL";
 import { postsActions } from "../store/posts-slice";
 
 const HomePage = () => {
-  const Posts = useSelector((state) => state.posts.posts);
   const [reply, setReply] = useState(false);
   const dispatch = useDispatch();
   const showReply = (e) => {
     setReply(!reply);
   };
   const [posts, setPosts] = useState([]);
-  const { newPost, setNewPost } = useComment();
+  // const { newPost, setNewPost } = useComment();
   useEffect(() => {
     fetch(`${BASE_URL}/comment`, {
       method: "GET",
@@ -39,40 +38,11 @@ const HomePage = () => {
       <Nav />
       <main className="homepage">
         <div className="mainComments">
-          <React.Fragment>
-            {Posts.length > 0 &&
-              Posts.map((post, index) => (
-                <>
-                  {console.log(post, index)}
-                  <Comment
-                    key={post._id}
-                    avatar={Avatar}
-                    purpose={"comment"}
-                    username={"rounder Rowsy"}
-                    date={post.createdAt}
-                    text={post.content}
-                    id={post._id}
-                  />
-                  <div className="replySection" key={index}>
-                    {/* REPLIES WILL BE LOOPED OVER HERE */}
-                    {post?.replies?.map((reply) => (
-                      <Comment
-                        key={reply._id}
-                        avatar={Avatar}
-                        purpose={"reply"}
-                        username={"Cipher"}
-                        date={reply.createdAt}
-                        text={reply.content}
-                        id={reply._id}
-                      />
-                    ))}
-                  </div>
-                </>
-              ))}
-            {}
-          </React.Fragment>
+          <React.Fragment></React.Fragment>
         </div>
-        <InputComponet avatar={Avatar} purpose={"SEND"} />
+        <div className="baseInput">
+          <InputComponet avatar={Avatar} purpose={"SEND"} />
+        </div>
       </main>
     </>
   );

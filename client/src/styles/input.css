@@ -9,6 +9,7 @@
   align-items: flex-start;
   gap: 1rem;
   border-radius: 1rem;
+  position: relative;
 }
 .inputForm img {
   width: 4rem;

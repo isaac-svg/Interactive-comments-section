@@ -9,21 +9,13 @@ import InputComponet from "./InputComponet";
 import { uiActions } from "../store/ui-slice";
 
 const Comment = ({ purpose, avatar, username, date, text, id }) => {
-  const dispatch = useDispatch();
-  const showForm = useSelector((state) => state.ui.showForm);
   const [reply, setReply] = useState(false);
-  const handleReply = (e) => {
-    if (e.target.classList.contains("replyFeature")) {
-      setReply(!reply);
-      console.log("hello");
-      // dispatch(uiActions.toggleForm());
-    }
-  };
+  const handleReply = (e) => {};
   return (
     <>
       <div className="postWrapper" data-id={`${id}`} onClick={handleReply}>
         <div className={`${purpose} post`}>
-          <Vote vote={0} />
+          <Vote vote={0} id={id} />
           <div className="content">
             <div className="head">
               <div className="author">

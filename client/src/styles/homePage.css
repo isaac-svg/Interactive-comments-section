@@ -5,6 +5,7 @@
   display: block;
   padding-top: 60px;
   margin: 0 auto;
+  position: relative;
   /* background-color: rebeccapurple; */
 }
 .mainComments {
